@@ -21,7 +21,7 @@ export class MenuSideBarPage {
         await this.openSideBarItem('Forms')
         await this.datePickerMenuItem.click()
     }
-    
+
     async openFormLayoutsPage() {
         await this.openSideBarItem('Forms')
         await this.formLayoutsMenuItem.click()

@@ -29,7 +29,7 @@ export class FormLayoutsPage {
             await expect(this.inlineForm.getByRole('checkbox', { name: "Remember me" })).toBeChecked()
         } else {
             await expect(this.inlineForm.getByRole('checkbox', { name: "Remember me" })).not.toBeChecked()
-        }  
+        }
     }
 
     /**
@@ -86,6 +86,6 @@ export class FormLayoutsPage {
         if (userData.rememberMe) {
             await this.inlineForm.getByRole('checkbox').check({ force: true })
         }
-        await this.inlineForm.getByRole('button', {name: "Submit"}).click()
+        await this.inlineForm.getByRole('button', { name: "Submit" }).click()
     }
 }
