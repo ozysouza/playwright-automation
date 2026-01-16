@@ -4,6 +4,7 @@ export class RequestHandler {
     private apiHeaders: object = {}
     private apiPath: string = ''
     private baseUrl?: string
+    private defaultBaseUrl: string
     private queryParams: object = {}
 
     url(url: string) {
@@ -29,6 +30,19 @@ export class RequestHandler {
     body(body: object) {
         this.apiBody = body
         return this
+    }
+
+    /**
+     * Constructs the full destination URL by combining the base URL, 
+     * the specific API endpoint path, and any defined query parameters.
+     * * @returns {string} The complete URL as a string, including encoded search parameters.
+     */
+    private getUrl(): string {
+        const url = new URL(`${this.baseUrl ?? this.defaultBaseUrl}${this.apiPath}`)
+        for (const [key, value] of Object.entries(this.queryParams)) {
+            url.searchParams.append(key, value)
+        }
+        return url.toString()
     }
 
 }
