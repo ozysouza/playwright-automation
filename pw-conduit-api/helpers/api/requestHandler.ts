@@ -1,3 +1,5 @@
+import { APIRequestContext, expect } from "@playwright/test"
+
 export class RequestHandler {
 
     private apiBody: object = {}
@@ -5,7 +7,13 @@ export class RequestHandler {
     private apiPath: string = ''
     private baseUrl?: string
     private defaultBaseUrl: string
+    private request: APIRequestContext
     private queryParams: object = {}
+
+    constructor(request: APIRequestContext, apiBaseUrl: string) {
+        this.request = request
+        this.defaultBaseUrl = apiBaseUrl
+    }
 
     url(url: string) {
         this.baseUrl = url
