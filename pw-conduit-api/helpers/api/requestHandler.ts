@@ -1,4 +1,5 @@
 import { APIRequestContext, expect } from "@playwright/test"
+import { APILogger } from "../../utils/logger"
 
 export class RequestHandler {
 
@@ -7,12 +8,14 @@ export class RequestHandler {
     private apiPath: string = ''
     private baseUrl?: string
     private defaultBaseUrl: string
+    private logger: APILogger
     private request: APIRequestContext
     private queryParams: object = {}
 
-    constructor(request: APIRequestContext, apiBaseUrl: string) {
+    constructor(request: APIRequestContext, apiBaseUrl: string, logger: APILogger) {
         this.request = request
         this.defaultBaseUrl = apiBaseUrl
+        this.logger = logger
     }
 
     url(url: string) {
