@@ -4,9 +4,10 @@ import { APILogger } from "../../utils/logger"
 export class RequestHandler {
 
     private apiBody: object = {}
-    private apiHeaders: object = {}
+    private apiHeaders: Record<string, string> = {}
     private apiPath: string = ''
     private baseUrl?: string
+    private clearAuthFlag = false
     private defaultBaseUrl: string
     private logger: APILogger
     private request: APIRequestContext
@@ -41,6 +42,18 @@ export class RequestHandler {
     body(body: object) {
         this.apiBody = body
         return this
+    }
+
+    clearAuth() {
+        this.clearAuthFlag = true
+        return this
+    }
+
+    private getHeaders() {
+        if (!this.clearAuthFlag) {
+            this.apiHeaders['Authorization'] = this.apiHeaders['Authorization'] || this.defaultAuthToken
+        }
+        return this.apiHeaders
     }
 
     /**
