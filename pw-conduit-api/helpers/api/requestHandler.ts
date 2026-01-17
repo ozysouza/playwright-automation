@@ -56,4 +56,31 @@ export class RequestHandler {
         return url.toString()
     }
 
+    /**
+     * Validates that the actual HTTP status code matches the expected one.
+     *
+     * If the status code does not match:
+     * - It retrieves recent API logs from the logger
+     * - Builds a detailed error message including expected vs actual status
+     * - Attaches recent request/response activity for easier debugging
+     * - Uses Error.captureStackTrace to remove this helper method from the stack trace,
+     *   making the error point to the original calling method instead
+     * @param actualStatus - Status code returned by the API response
+     * @param expectStatus - Status code expected by the test
+     * @param callingMethod - Reference to the public method that invoked this validator
+     *
+     * @throws Error when the actual status does not match the expected status
+     */
+    private statusCodeValidator(actualStatus: number, expectStatus: number, callingMethod: Function) {
+        if (actualStatus !== expectStatus) {
+            const logs = this.logger.getRecentLogs()
+            const error = new Error(
+                `Expected status ${expectStatus} but received ${actualStatus}\n\n` +
+                `Recent API Activity: \n${logs}`
+            )
+            Error.captureStackTrace(error, callingMethod)
+            throw error
+        }
+    }
+
 }
