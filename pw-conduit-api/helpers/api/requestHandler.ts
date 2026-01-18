@@ -59,6 +59,26 @@ export class RequestHandler {
     }
 
     /**
+     * Sends an HTTP DELETE request using the configured URL and headers.
+     *
+     * @param statusCode - Expected HTTP status code returned by the API
+     *
+     * @throws Error if the actual response status does not match the expected status code
+     */
+    async deleteRequest(statusCode: number) {
+        const url = this.getUrl()
+        this.logger.logRequest('DELETE', url, this.getHeaders())
+
+        const resp = await this.request.delete(url, {
+            headers: this.getHeaders()
+        })
+
+        const actualStatus = resp.status()
+        this.logger.logResponse(actualStatus)
+        this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)
+    }
+
+    /**
      * Constructs the full destination URL by combining the base URL, 
      * the specific API endpoint path, and any defined query parameters.
      * * @returns {string} The complete URL as a string, including encoded search parameters.
