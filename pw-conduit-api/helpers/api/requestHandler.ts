@@ -51,6 +51,22 @@ export class RequestHandler {
         return this
     }
 
+    /**
+     * Builds and returns the HTTP headers for the current API request.
+     *
+     * By default, this method ensures that the `Authorization` header
+     * is present by injecting the default authentication token unless
+     * authentication has been explicitly cleared.
+     *
+     * Behavior:
+     * - If `clearAuthFlag` is `false`:
+     *   - Uses an already defined `Authorization` header if present
+     *   - Otherwise injects the default auth token
+     * - If `clearAuthFlag` is `true`:
+     *   - No authorization header is added or modified
+     *
+     * @returns An object containing the resolved HTTP headers for the request
+     */
     private getHeaders() {
         if (!this.clearAuthFlag) {
             this.apiHeaders['Authorization'] = this.apiHeaders['Authorization'] || this.defaultAuthToken
