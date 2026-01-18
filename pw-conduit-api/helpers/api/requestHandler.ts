@@ -123,6 +123,32 @@ export class RequestHandler {
     }
 
     /**
+     * Sends an HTTP PUT request using the configured URL, headers, and request body.
+     *
+     * @param statusCode - Expected HTTP status code returned by the API
+     * @returns Parsed JSON response body
+     *
+     * @throws Error if the actual response status does not match the expected status code
+     */
+    async putRequest(statusCode: number) {
+        const url = this.getUrl()
+        this.logger.logRequest('PUT', url, this.getHeaders(), this.apiBody)
+
+        const resp = await this.request.put(url, {
+            headers: this.getHeaders(),
+            data: this.apiBody
+        })
+
+        const actualStatus = resp.status()
+        const respJSON = await resp.json()
+
+        this.logger.logResponse(actualStatus, respJSON)
+        this.statusCodeValidator(actualStatus, statusCode, this.putRequest)
+
+        return respJSON
+    }
+
+    /**
      * Validates that the actual HTTP status code matches the expected one.
      *
      * If the status code does not match:
