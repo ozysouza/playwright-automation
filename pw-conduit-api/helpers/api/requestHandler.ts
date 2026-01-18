@@ -67,7 +67,7 @@ export class RequestHandler {
      *
      * @returns An object containing the resolved HTTP headers for the request
      */
-    private getHeaders() {
+    private getHeaders(): Record<string, string> {
         if (!this.clearAuthFlag) {
             this.apiHeaders['Authorization'] = this.apiHeaders['Authorization'] || this.defaultAuthToken
         }
@@ -81,7 +81,7 @@ export class RequestHandler {
      *
      * @throws Error if the actual response status does not match the expected status code
      */
-    async deleteRequest(statusCode: number) {
+    async deleteRequest(statusCode: number): Promise<void> {
         const url = this.getUrl()
         this.logger.logRequest('DELETE', url, this.getHeaders())
 
@@ -199,7 +199,7 @@ export class RequestHandler {
      *
      * @throws Error when the actual status does not match the expected status
      */
-    private statusCodeValidator(actualStatus: number, expectStatus: number, callingMethod: Function) {
+    private statusCodeValidator(actualStatus: number, expectStatus: number, callingMethod: Function): void {
         if (actualStatus !== expectStatus) {
             const logs = this.logger.getRecentLogs()
             const error = new Error(
