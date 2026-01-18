@@ -8,14 +8,16 @@ export class RequestHandler {
     private apiPath: string = ''
     private baseUrl?: string
     private clearAuthFlag = false
+    private defaultAuthToken: string
     private defaultBaseUrl: string
     private logger: APILogger
     private request: APIRequestContext
     private queryParams: object = {}
 
-    constructor(request: APIRequestContext, apiBaseUrl: string, logger: APILogger) {
+    constructor(request: APIRequestContext, apiBaseUrl: string, logger: APILogger, authToken: string = '') {
         this.request = request
         this.defaultBaseUrl = apiBaseUrl
+        this.defaultAuthToken = authToken
         this.logger = logger
     }
 
@@ -67,6 +69,32 @@ export class RequestHandler {
             url.searchParams.append(key, value)
         }
         return url.toString()
+    }
+
+    /**
+     * Sends an HTTP POST request using the configured URL, headers, and request body.
+     *
+     * @param statusCode - Expected HTTP status code returned by the API
+     * @returns Parsed JSON response body
+     *
+     * @throws Error if the actual response status does not match the expected status code
+     */
+    async postRequest(statusCode: number) {
+        const url = this.getUrl()
+        this.logger.logRequest('POST', url, this.getHeaders(), this.apiBody)
+
+        const resp = await this.request.post(url, {
+            headers: this.getHeaders(),
+            data: this.apiBody
+        })
+
+        const actualStatus = resp.status()
+        const respJSON = await resp.json()
+
+        this.logger.logResponse(actualStatus, respJSON)
+        this.statusCodeValidator(actualStatus, statusCode, this.postRequest)
+
+        return respJSON
     }
 
     /**
