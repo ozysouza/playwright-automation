@@ -72,6 +72,31 @@ export class RequestHandler {
     }
 
     /**
+     * Sends an HTTP GET request using the configured URL, headers, and query parameters.
+     *
+     * @param statusCode - Expected HTTP status code returned by the API
+     * @returns Parsed JSON response body
+     *
+     * @throws Error if the actual response status does not match the expected status code
+     */
+    async getRequest(statusCode: number) {
+        const url = this.getUrl()
+        this.logger.logRequest('GET', url, this.getHeaders())
+
+        const resp = await this.request.get(url, {
+            headers: this.getHeaders()
+        })
+
+        const actualStatus = resp.status()
+        const respJSON = await resp.json()
+
+        this.logger.logResponse(actualStatus, respJSON)
+        this.statusCodeValidator(actualStatus, statusCode, this.getRequest)
+
+        return respJSON
+    }
+
+    /**
      * Sends an HTTP POST request using the configured URL, headers, and request body.
      *
      * @param statusCode - Expected HTTP status code returned by the API
