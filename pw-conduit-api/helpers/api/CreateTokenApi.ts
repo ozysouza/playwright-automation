@@ -1,4 +1,4 @@
-import { RequestHandlerApi } from "./requestHandlerApi";
+import { RequestHandlerApi } from "./RequestHandlerApi";
 import { APILogger } from '../../utils/logger'
 import { config } from "../../config/api-test.config";
 import { request } from "@playwright/test";

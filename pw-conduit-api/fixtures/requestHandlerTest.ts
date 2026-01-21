@@ -1,5 +1,5 @@
 import { test as base } from "@playwright/test";
-import { RequestHandlerApi } from "../helpers/api/requestHandlerApi";
+import { RequestHandlerApi } from "../helpers/api/RequestHandlerApi";
 import { config } from "../config/api-test.config";
 import { APILogger } from '../utils/logger'
 import { setCustomExpectLogger } from '../utils/customExpect'
