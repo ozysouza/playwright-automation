@@ -11,6 +11,15 @@ interface Article {
 
 export class AssertApi {
 
+    /**
+     * Asserts that an articles response follows pagination constraints.
+     * @param articles - Array of articles returned by the API
+     * @param expectedLimit - The requested pagination limit
+     */
+    articlesPagination(articles: Article[], expectedLimit: number) {
+        expect(articles).toHaveLength(expectedLimit)
+    }
+
     articlesProperties(articles: Article[]) {
         for (const article of articles) {
             expect(article).toHaveProperty('title')
