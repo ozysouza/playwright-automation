@@ -13,6 +13,26 @@ interface Article {
 export class AssertApi {
 
     /**
+     * Asserts that a list of articles matches expected article metadata.
+     *
+     * Compares each article against the corresponding expected article
+     * using a partial match (`toMatchObject`) to validate only stable fields:
+     * - slug, title, description and body
+     * @param articles - Articles returned by the API response
+     * @param expectedArticles - Expected articles payload used for comparison
+     */
+    articlesMatch(articles: Article[], expectedArticles: any[]) {
+        articles.forEach((article, index) => {
+            expect(article).toMatchObject({
+                slug: expectedArticles[index].slug,
+                title: expectedArticles[index].title,
+                description: expectedArticles[index].description,
+                body: expectedArticles[index].body
+            })
+        })
+    }
+
+    /**
      * Asserts that an articles response follows pagination constraints.
      * @param articles - Array of articles returned by the API
      * @param expectedLimit - The requested pagination limit
