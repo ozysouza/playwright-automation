@@ -1,0 +1,22 @@
+{
+  "articles": [
+    {
+      "slug": "Engaging-in-Live-Zoom-Sessions:-Interact-with-Instructors-and-Peers-Ask-Questions-in-Real-Time-1",
+      "title": "Engaging in Live Zoom Sessions: Interact with Instructors and Peers, Ask Questions in Real-Time",
+      "description": "In our increasingly online world, personal engagement remains a crucial element of effective learning. At Bondar Academy, we address this by hosting live Zoom sessions. These sessions provide a platform for live interaction between instructors and students, and among students themselves. Complementing our Slack channel, these live sessions offer an additional avenue for asking questions and engaging in meaningful discussions.",
+      "body": "In our increasingly online world, personal engagement remains a crucial element of effective learning. \nAt Bondar Academy, we address this by hosting live Zoom sessions. These sessions provide a platform for live interaction between instructors and students and among students themselves. Complementing our Slack channel, these live sessions offer an additional avenue for asking questions and engaging in meaningful discussions."
+    },
+    {
+      "slug": "Utilizing-Slack-for-Continuous-Engagement:-Connect-with-Instructors-Share-Insights-and-Collaborate-1",
+      "title": "Utilizing Slack for Continuous Engagement: Connect with Instructors, Share Insights, and Collaborate",
+      "description": "Slack stands out as a widely-used messaging and collaboration platform, celebrated for its convenience and versatility. It enables simultaneous participation in multiple conversations, supports comments and emoji reactions, and allows users to share screenshots, videos, and code snippets. Its functionality extends to making calls in huddle sessions. Given these robust features, Bondar Academy has chosen Slack as our primary communication platform, facilitating seamless interaction and collaboration.",
+      "body": "As a new member of Bondar Academy, one of your initial steps should be registering for the Bondar Academy Slack Workspace. Upon registration at Bondar Academy, you'll receive a welcome email containing the URL to join. This Workspace serves as a central hub for communication with instructors and fellow students. Whether you have a question, need to share code, or want to upload screenshots, Slack makes it easy and efficient. Moreover, its compatibility with both desktop and mobile devices, by downloading and installing the app, ensures you can stay connected with your instructors and the community wherever you go."
+    },
+    {
+      "slug": "Stay-Ahead-with-Bondar-Academy:-Subscribe-to-Our-YouTube-channel-for-Latest-Tech-and-Education-Updates-1",
+      "title": "Stay Ahead with Bondar Academy: Subscribe to Our YouTube channel for Latest Tech and Education Updates",
+      "description": "Who doesn't appreciate high-quality free resources? YouTube serves as an ideal platform for sharing the latest news, updates, and a wealth of tips and tricks in test automation and technology. Keep abreast of these invaluable insights by subscribing to the @bondaracademy YouTube channel.",
+      "body": "Who doesn't appreciate high-quality free resources? \n\nYouTube serves as an ideal platform for sharing the latest news, updates, and a wealth of tips and tricks in test automation and technology. \n\nKeep abreast of these invaluable insights by subscribing to our YouTube channel: https://www.youtube.com/@bondaracademy"
+    }
+  ]
+}
