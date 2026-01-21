@@ -41,6 +41,11 @@ export class AssertApi {
         expect(articles).toHaveLength(expectedLimit)
     }
 
+    /**
+     * Asserts that a list of articles contain the required properties:
+     *  title, slug, author, body, createdAt, updatedAt
+     * @param articles - Array of articles returned by the API
+     */
     articlesProperties(articles: Article[]) {
         for (const article of articles) {
             expect(article).toHaveProperty('title')
