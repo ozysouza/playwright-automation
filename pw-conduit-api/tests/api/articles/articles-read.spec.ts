@@ -10,6 +10,42 @@ export const test = mergeTests(
     assertApiTest,
 );
 
+test('Get article by slug', async ({ requestHandler, assertApi }) => {
+    let articlesResponse: any
+    let articleBySlugResponse: any
+
+    await test.step('Given an unauthenticated user retrieves the global articles list', async () => {
+        articlesResponse = await requestHandler
+            .path('/articles')
+            .clearAuth()
+            .getRequest(200)
+    })
+
+    await test.step('When the user requests an article by its slug', async () => {
+        articleBySlugResponse = await requestHandler
+            .path(`/articles/${articlesResponse.articles[0].slug}`)
+            .clearAuth()
+            .getRequest(200)
+    })
+
+    await test.step('Then the response should match the article-by-slug schema', async () => {
+        await apiExpect(articleBySlugResponse).toMatchSchema('articles', 'GET_articles_slug')
+    })
+
+    await test.step('And the returned article should match the selected global article', async () => {
+        const expectedArticle = articlesResponse.articles[0]
+        const actualArticle = articleBySlugResponse.article
+
+        expect(actualArticle).toMatchObject({
+            slug: expectedArticle.slug,
+            title: expectedArticle.title,
+            description: expectedArticle.description,
+            body: expectedArticle.body,
+            tagList: expectedArticle.tagList,
+        })
+    })
+})
+
 test('Get global articles list', async ({ requestHandler, assertApi }) => {
     let response: any
 
