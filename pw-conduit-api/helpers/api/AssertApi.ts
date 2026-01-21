@@ -1,12 +1,13 @@
 import { expect } from '@playwright/test'
 
 interface Article {
-    title: string
     slug: string
-    author: object
+    title: string
+    description: string
     body: string
     createdAt: string
     updatedAt: string
+    author: object
 }
 
 export class AssertApi {
