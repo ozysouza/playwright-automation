@@ -13,13 +13,13 @@ export const test = mergeTests(
 test('Get global articles list', async ({ requestHandler, assertApi }) => {
     let response: any
 
-    await test.step('Given the global articles API endpoint', async () => {
+    await test.step('Given the user is unauthenticated', async () => {
+        requestHandler.clearAuth()
     })
 
-    await test.step('When the user with no authorization requests the first 10 articles', async () => {
+    await test.step('When the user requests global articles', async () => {
         response = await requestHandler
             .path('/articles')
-            .clearAuth()
             .getRequest(200)
     })
 
@@ -27,8 +27,8 @@ test('Get global articles list', async ({ requestHandler, assertApi }) => {
         await apiExpect(response).toMatchSchema('articles', 'GET_articles')
     })
 
-    await test.step('And the response should contain exactly 10 articles', async () => {
-        expect(response.articles.length).toBe(10)
+    await test.step('And the response should return 10 articles', async () => {
+        assertApi.articlesPagination(response.articles, 10)
         expect(response.articlesCount).toBe(10)
     })
 
@@ -37,13 +37,7 @@ test('Get global articles list', async ({ requestHandler, assertApi }) => {
     })
 
     await test.step('And the response should match the expected global payload', async () => {
-        for (let index = 0; index < response.length; index++) {
-            expect(response.articles[index]).toMatchObject({
-                slug: globalPayload.articles[index].slug,
-                title: globalPayload.articles[index].title,
-                description: globalPayload.articles[index].description,
-            })
-        }
+        assertApi.articlesMatch(response.articles, globalPayload.articles)
     })
 })
 
