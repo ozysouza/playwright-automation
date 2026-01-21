@@ -1,9 +1,15 @@
-import { test } from '../../../fixtures/requestHandlerTest'
-import { expect } from '@playwright/test';
+import { expect, mergeTests } from '@playwright/test';
+import { requestHandlerTest } from '../../../fixtures/requestHandlerTest'
+import { assertApiTest } from '../../../fixtures/assertApiTest';
 import { apiExpect } from '../../../utils/customExpect';
 import globalPayload from '../../../request-objects/articles/GLOBAL_GET_articles.json'
 
-test('Get global articles list', async ({ requestHandler, validate }) => {
+export const test = mergeTests(
+    requestHandlerTest,
+    assertApiTest,
+);
+
+test('Get global articles list', async ({ requestHandler, assertApi }) => {
     let response: any
 
     await test.step('Given the global articles API endpoint', async () => {
@@ -12,7 +18,6 @@ test('Get global articles list', async ({ requestHandler, validate }) => {
     await test.step('When the user with no authorization requests the first 10 articles', async () => {
         response = await requestHandler
             .path('/articles')
-            .params({ limit: 10, offset: 0 })
             .clearAuth()
             .getRequest(200)
     })
@@ -27,7 +32,7 @@ test('Get global articles list', async ({ requestHandler, validate }) => {
     })
 
     await test.step('And each article should have required fields', async () => {
-        validate.articlesProperties(response.articles)
+        assertApi.articlesProperties(response.articles)
     })
 
     await test.step('And the response should match the expected global payload', async () => {
