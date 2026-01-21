@@ -1,4 +1,4 @@
-import { RequestHandler } from "./requestHandler";
+import { RequestHandlerApi } from "./requestHandlerApi";
 import { APILogger } from '../../utils/logger'
 import { config } from "../../config/api-test.config";
 import { request } from "@playwright/test";
@@ -18,7 +18,7 @@ import { request } from "@playwright/test";
 export async function createToken(email: string, password: string) {
     const context = await request.newContext()
     const logger = new APILogger()
-    const requestHandler = new RequestHandler(context, config.apiUrl, logger)
+    const requestHandler = new RequestHandlerApi(context, config.apiUrl, logger)
 
     try {
         const tokenResp = await requestHandler

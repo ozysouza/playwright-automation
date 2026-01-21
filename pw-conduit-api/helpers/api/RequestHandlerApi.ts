@@ -1,7 +1,7 @@
 import { APIRequestContext, expect } from "@playwright/test"
 import { APILogger } from "../../utils/logger"
 
-export class RequestHandler {
+export class RequestHandlerApi {
 
     private apiBody: object = {}
     private apiHeaders: Record<string, string> = {}

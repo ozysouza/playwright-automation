@@ -1,19 +1,19 @@
 import { test as base } from "@playwright/test";
-import { RequestHandler } from "../helpers/api/requestHandler";
+import { RequestHandlerApi } from "../helpers/api/requestHandlerApi";
 import { config } from "../config/api-test.config";
 import { APILogger } from '../utils/logger'
 import { setCustomExpectLogger } from '../utils/customExpect'
-import { createToken } from '../helpers/api/createToken'
+import { createToken } from '../helpers/api/CreateTokenApi'
 
 export type TestFixtures = {
-    requestHandler: RequestHandler
+    requestHandler: RequestHandlerApi
 }
 
 export type WorkerFixture = {
     authToken: string
 }
 
-export const test = base.extend<TestFixtures, WorkerFixture>({
+export const requestHandlerTest = base.extend<TestFixtures, WorkerFixture>({
     /**
      * Worker-scoped authentication token fixture.
      *
@@ -31,6 +31,6 @@ export const test = base.extend<TestFixtures, WorkerFixture>({
     requestHandler: async ({ request, authToken }, use) => {
         const logger = new APILogger()
         setCustomExpectLogger(logger)
-        await use(new RequestHandler(request, config.apiUrl, logger, authToken))
+        await use(new RequestHandlerApi(request, config.apiUrl, logger, authToken))
     }
 })
