@@ -107,3 +107,19 @@ test('Get global articles list with pagination', async ({ requestHandler, assert
         assertApi.articlesMatch(response.articles, pagGlobalPayload.articles)
     })
 })
+
+test('Should return 404 when requesting an article with an invalid slug', async ({ requestHandler, assertApi }) => {
+    let response: any
+    const invalidSlug = 'this-is-invalid-123'
+
+    await test.step('When the user requests an article with a non-existing slug', async () => {
+        response = await requestHandler
+            .path(`/articles/${invalidSlug}`)
+            .clearAuth()
+            .getRequest(404)
+    })
+
+    await test.step('Then the API should return a not found error message', async () => {
+        expect(response.errors.article[0]).toMatch("not found")
+    })
+})
