@@ -13,21 +13,31 @@ interface Article {
 export class AssertApi {
 
     /**
-     * Asserts that a list of articles matches expected article metadata.
+     * Asserts one or multiple articles against expected article data.
      *
-     * Compares each article against the corresponding expected article
-     * using a partial match (`toMatchObject`) to validate only stable fields:
-     * - slug, title, description and body
-     * @param articles - Articles returned by the API response
-     * @param expectedArticles - Expected articles payload used for comparison
+     * This helper supports both:
+     * - A single Article object (e.g., POST /articles response)
+     * - An array of Articles (e.g., GET /articles list)
+     *
+     * Internally, it normalizes inputs to arrays to keep the assertion logic DRY.
+     *
+     * @param articles - The actual article or list of articles returned by the API.
+     * @param expectedArticles - The expected article or list of articles to match against.
      */
-    articlesMatch(articles: Article[], expectedArticles: any[]) {
-        articles.forEach((article, index) => {
+    articlesMatch(
+        articles: Article | Article[],
+        expectedArticles: Article | Article[] | any[]): void {
+
+        const actualArray = Array.isArray(articles) ? articles : [articles]
+        const expectedArray = Array.isArray(expectedArticles) ? expectedArticles : [expectedArticles]
+
+        actualArray.forEach((article, index) => {
             expect(article).toMatchObject({
-                slug: expectedArticles[index].slug,
-                title: expectedArticles[index].title,
-                description: expectedArticles[index].description,
-                body: expectedArticles[index].body
+                slug: expectedArray[index].slug,
+                title: expectedArray[index].title,
+                description: expectedArray[index].description,
+                body: expectedArray[index].body,
+                tagList: expectedArray[index].tagList,
             })
         })
     }
