@@ -76,7 +76,7 @@ test.describe('Articles - Read (GET) Operations', {
         })
 
         await test.step('And the response should match the expected global payload', async () => {
-            assertApi.articlesMatch(response.articles, globalPayload.articles)
+            assertApi.articlesMatches(response.articles, globalPayload.articles)
         })
     })
 
@@ -107,7 +107,7 @@ test.describe('Articles - Read (GET) Operations', {
         })
 
         await test.step('And the response should match the expected paginated payload', async () => {
-            assertApi.articlesMatch(response.articles, pagGlobalPayload.articles)
+            assertApi.articlesMatches(response.articles, pagGlobalPayload.articles)
         })
     })
 

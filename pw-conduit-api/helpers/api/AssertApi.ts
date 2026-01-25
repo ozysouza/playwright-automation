@@ -24,7 +24,7 @@ export class AssertApi {
      * @param articles - The actual article or list of articles returned by the API.
      * @param expectedArticles - The expected article or list of articles to match against.
      */
-    articlesMatch(
+    articlesMatches(
         articles: Article | Article[],
         expectedArticles: Article | Article[] | any[]): void {
 
