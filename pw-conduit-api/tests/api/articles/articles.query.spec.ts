@@ -2,6 +2,7 @@ import { expect, mergeTests } from '@playwright/test';
 import { requestHandlerTest } from '../../../fixtures/requestHandlerTest'
 import { assertApiTest } from '../../../fixtures/assertApiTest';
 import { apiExpect } from '../../../utils/customExpect';
+import { buildArticlePayload } from './factory/articleFactory'
 import globalPayload from '../../../request-objects/articles/GLOBAL_GET_articles.json'
 import pagGlobalPayload from '../../../request-objects/articles/PAG_GLOBAL_GET_articles.json'
 
@@ -128,3 +129,48 @@ test.describe('Articles - Read (GET) Operations', {
     })
 })
 
+test.describe('Articles - Create (POST) Operations', {
+    tag: '@articles @post',
+}, () => {
+
+    test('Authenticated user can create an article', async ({ requestHandler, assertApi }) => {
+        let payload: any
+        let articleResponse: any
+
+        await test.step('Given an authenticated user', async () => {
+            // Authentication is handled by the worker fixture (authToken)
+        })
+
+        await test.step('When the user creates a new article', async () => {
+            payload = buildArticlePayload()
+
+            articleResponse = await requestHandler
+                .path('/articles')
+                .body(payload)
+                .postRequest(201)
+        })
+
+        await test.step('Then the response should match the articles schema', async () => {
+            await apiExpect(articleResponse).toMatchSchema('articles', 'POST_articles')
+        })
+
+        await test.step('And the created article should appear in the global feed', async () => {
+            const globalArticlesRequest = await requestHandler
+                .path('/articles')
+                .getRequest(200)
+                
+            const createdArticle = globalArticlesRequest.articles.find(
+                (a: any) => a.slug === articleResponse.article.slug
+            )
+
+            expect(createdArticle).toBeTruthy()
+            assertApi.articlesMatches(createdArticle, articleResponse.article)
+        })
+
+        await test.step('And the article should be deleted to keep the environment clean', async () => {
+            await requestHandler
+                .path(`/articles/${articleResponse.article.slug}`)
+                .deleteRequest(204)
+        })
+    })
+})
