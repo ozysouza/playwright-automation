@@ -8,6 +8,7 @@ interface Article {
     createdAt: string
     updatedAt: string
     author: object
+    tagList: []
 }
 
 export class AssertApi {
@@ -40,6 +41,21 @@ export class AssertApi {
                 tagList: expectedArray[index].tagList,
             })
         })
+    }
+
+    /**
+     * Asserts that the updated article differs from the base article
+     * in core user-controlled fields.
+     * @param {Article} updatedArticle - The article returned after the PUT update.
+     * @param {Article} baseArticle - The original article before the update.
+     *
+     * @throws Will fail the test if any core field did not change.
+     */
+    articleNotMatch(updatedArticle: Article, baseArticle: Article): void {
+        expect(updatedArticle.title).not.toEqual(baseArticle.title)
+        expect(updatedArticle.description).not.toEqual(baseArticle.description)
+        expect(updatedArticle.body).not.toEqual(baseArticle.body)
+        expect(updatedArticle.tagList).not.toEqual(baseArticle.tagList)
     }
 
     /**

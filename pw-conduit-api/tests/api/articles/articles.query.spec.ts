@@ -129,6 +129,72 @@ test.describe('Articles - Read (GET) Operations', {
     })
 })
 
+test.describe('Articles - Update (PUT) Operations', {
+    tag: '@articles @put',
+}, () => {
+
+    test('Authenticated user can update an existing article', async ({ requestHandler, assertApi }) => {
+        let baseArticleResponse: any
+        let updatedArticleResponse: any
+
+        await test.step('Given an authenticated user has an existing article', async () => {
+            const basePayload = buildArticlePayload()
+
+            baseArticleResponse = await requestHandler
+                .path('/articles')
+                .body(basePayload)
+                .postRequest(201)
+
+            const globalArticlesResponse = await requestHandler
+                .path('/articles')
+                .getRequest(200)
+
+            const createdArticle = globalArticlesResponse.articles.find(
+                (a: any) => a.slug === baseArticleResponse.article.slug
+            )
+
+            expect(createdArticle).toBeTruthy()
+            assertApi.articlesMatches(createdArticle, baseArticleResponse.article)
+        })
+
+        await test.step('When the user updates the article', async () => {
+            const updatePayload = buildArticlePayload()
+
+            updatedArticleResponse = await requestHandler
+                .path(`/articles/${baseArticleResponse.article.slug}`)
+                .body(updatePayload)
+                .putRequest(200)
+        })
+
+        await test.step('Then the response should match the PUT articles schema', async () => {
+            await apiExpect(updatedArticleResponse).toMatchSchema('articles', 'PUT_articles')
+        })
+
+        await test.step('And the updated article should appear in the global feed', async () => {
+            const globalArticlesRequest = await requestHandler
+                .path('/articles')
+                .getRequest(200)
+
+            const updatedArticle = globalArticlesRequest.articles.find(
+                (a: any) => a.slug === updatedArticleResponse.article.slug
+            )
+
+            expect(updatedArticleResponse).toBeTruthy()
+            assertApi.articlesMatches(updatedArticle, updatedArticleResponse.article)
+        })
+
+        await test.step('And the updated fields should differ from the original article', async () => {
+            assertApi.articleNotMatch(updatedArticleResponse.article, baseArticleResponse.article)
+        })
+
+        await test.step('And the article should be deleted to keep the environment clean', async () => {
+            await requestHandler
+                .path(`/articles/${updatedArticleResponse.article.slug}`)
+                .deleteRequest(204)
+        })
+    })
+})
+
 test.describe('Articles - Create (POST) Operations', {
     tag: '@articles @post',
 }, () => {
@@ -158,7 +224,7 @@ test.describe('Articles - Create (POST) Operations', {
             const globalArticlesRequest = await requestHandler
                 .path('/articles')
                 .getRequest(200)
-                
+
             const createdArticle = globalArticlesRequest.articles.find(
                 (a: any) => a.slug === articleResponse.article.slug
             )
