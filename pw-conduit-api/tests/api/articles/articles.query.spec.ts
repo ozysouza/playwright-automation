@@ -5,6 +5,7 @@ import { apiExpect } from '../../../utils/customExpect';
 import { buildArticlePayload } from './factory/articleFactory'
 import globalPayload from '../../../request-objects/articles/GLOBAL_GET_articles.json'
 import pagGlobalPayload from '../../../request-objects/articles/PAG_GLOBAL_GET_articles.json'
+import { log } from 'console';
 
 export const test = mergeTests(
     requestHandlerTest,
@@ -237,6 +238,35 @@ test.describe('Articles - Create (POST) Operations', {
             await requestHandler
                 .path(`/articles/${articleResponse.article.slug}`)
                 .deleteRequest(204)
+        })
+    })
+
+    test('Should return 401 when requesting an article without authentication', async ({ requestHandler, assertApi }) => {
+        let requestResponse: any
+
+        await test.step('Given the user is not authenticated', async () => {
+            requestResponse = await requestHandler
+                .clearAuth()
+        })
+
+        await test.step('When the user attempts to create a new article', async () => {
+            const payload = buildArticlePayload()
+
+            requestResponse = await requestHandler
+                .path('/articles')
+                .body(payload)
+                .postRequest(401)
+        })
+
+        await test.step('Then the API should respond with 401 and an authorization error message', async () => {
+            expect(requestResponse).toMatchObject({
+                status: 'error',
+                message: 'missing authorization credentials'
+            })
+        })
+
+        await test.step('And the response should match the 401 error schema', async () => {
+            await apiExpect(requestResponse).toMatchSchema('errors', '401_auth_article')
         })
     })
 })
