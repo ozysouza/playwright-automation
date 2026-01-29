@@ -5,7 +5,6 @@ import { apiExpect } from '../../../utils/customExpect';
 import { buildArticlePayload } from './factory/articleFactory'
 import globalPayload from '../../../request-objects/articles/GLOBAL_GET_articles.json'
 import pagGlobalPayload from '../../../request-objects/articles/PAG_GLOBAL_GET_articles.json'
-import { log } from 'console';
 
 export const test = mergeTests(
     requestHandlerTest,
@@ -269,4 +268,40 @@ test.describe('Articles - Create (POST) Operations', {
             await apiExpect(requestResponse).toMatchSchema('errors', '401_auth_article')
         })
     })
+
+    /**
+     * Validates that the API returns a 422 error when required fields are empty.
+     * Dynamically tests title, description, and body fields using parameterized loop.
+     */
+    const invalidCases = [
+        { field: 'body', errorMessage: "can't be blank" },
+        { field: 'description', errorMessage: "can't be blank" },
+        { field: 'title', errorMessage: "can't be blank" },
+    ]
+    for (const { field, errorMessage } of invalidCases) {
+        test(`Should return 422 when requesting an article with empty ${field} field`, async ({ requestHandler }) => {
+            let articleResponse: any
+
+            await test.step('Given an authenticated user', async () => {
+                // Authentication is handled by the worker fixture (authToken)
+            })
+
+            await test.step(`When the user creates an article with empty ${field} field`, async () => {
+                const payload = buildArticlePayload({ [field]: '' })
+
+                articleResponse = await requestHandler
+                    .path('/articles')
+                    .body(payload)
+                    .postRequest(422)
+            })
+
+            await test.step(`Then the API should return validation error for ${field}`, async () => {
+                expect(articleResponse.errors[field]).toContain(errorMessage)
+            })
+
+            await test.step('And the response should match the 422 error schema', async () => {
+                await apiExpect(articleResponse).toMatchSchema('errors', `422_unprocessable_${field}_article`)
+            })
+        })
+    }
 })
