@@ -113,18 +113,26 @@ test.describe('Articles - Read (GET) Operations', {
     })
 
     test('Should return 404 when requesting an article with an invalid slug', async ({ requestHandler, assertApi }) => {
-        let response: any
+        let requestResponse: any
         const invalidSlug = 'this-is-invalid-123'
 
-        await test.step('When the user requests an article with a non-existing slug', async () => {
-            response = await requestHandler
-                .path(`/articles/${invalidSlug}`)
+        await test.step('Given the user is unauthenticated', async () => {
+            requestResponse = await requestHandler
                 .clearAuth()
+        })
+
+        await test.step('When the user requests an article with a non-existing slug', async () => {
+            requestResponse = await requestHandler
+                .path(`/articles/${invalidSlug}`)
                 .getRequest(404)
         })
 
         await test.step('Then the API should return a not found error message', async () => {
-            expect(response.errors.article[0]).toMatch("not found")
+            expect(requestResponse.errors.article[0]).toMatch("not found")
+        })
+
+        await test.step('And the response should match the GET 404 error schema', async () => {
+            await apiExpect(requestResponse).toMatchSchema('errors', 'GET_404_not_found')
         })
     })
 })
@@ -202,7 +210,7 @@ test.describe('Articles - Update (PUT) Operations', {
             // Authentication is handled by the worker fixture (authToken)
         })
 
-        await test.step('When the user tries to update an article with a non-existing slug', async () => {
+        await test.step('When the user attempts to update an article with a non-existing slug', async () => {
             const payload = buildArticlePayload()
 
             requestResponse = await requestHandler
