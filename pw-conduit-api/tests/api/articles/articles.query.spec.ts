@@ -382,16 +382,13 @@ test.describe('Articles - Delete (DEL) Operations', {
         })
 
         await test.step('When the user attempts to delete an article', async () => {
-            const payload = buildArticlePayload()
-
             const articlesResponse = await requestHandler
                 .path('/articles')
                 .getRequest(200)
 
             requestResponse = await requestHandler
                 .path(`/articles/${articlesResponse.articles[0].slug}`)
-                .body(payload)
-                .putRequest(401)
+                .deleteRequest(401)
         })
 
         await test.step('Then the API should respond with 401 and an authorization error message', async () => {
