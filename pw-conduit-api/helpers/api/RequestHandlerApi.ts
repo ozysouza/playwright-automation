@@ -81,7 +81,7 @@ export class RequestHandlerApi {
      *
      * @throws Error if the actual response status does not match the expected status code
      */
-    async deleteRequest(statusCode: number): Promise<void> {
+    async deleteRequest(statusCode: number): Promise<any> {
         const url = this.getUrl()
         this.logger.logRequest('DELETE', url, this.getHeaders())
 
@@ -92,6 +92,9 @@ export class RequestHandlerApi {
         const actualStatus = resp.status()
         this.logger.logResponse(actualStatus)
         this.statusCodeValidator(actualStatus, statusCode, this.deleteRequest)
+
+        const text = await resp.text()
+        return text ? JSON.parse(text) : {}
     }
 
     /**
