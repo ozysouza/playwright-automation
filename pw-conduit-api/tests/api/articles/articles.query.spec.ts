@@ -368,3 +368,42 @@ test.describe('Articles - Create (POST) Operations', {
         })
     }
 })
+
+test.describe('Articles - Delete (DEL) Operations', {
+    tag: '@articles @del',
+}, () => {
+
+    test('Should return 401 when deleting an article without authentication', async ({ requestHandler, assertApi }) => {
+        let requestResponse: any
+
+        await test.step('Given the user is not authenticated', async () => {
+            requestResponse = await requestHandler
+                .clearAuth()
+        })
+
+        await test.step('When the user attempts to delete an article', async () => {
+            const payload = buildArticlePayload()
+
+            const articlesResponse = await requestHandler
+                .path('/articles')
+                .getRequest(200)
+
+            requestResponse = await requestHandler
+                .path(`/articles/${articlesResponse.articles[0].slug}`)
+                .body(payload)
+                .putRequest(401)
+        })
+
+        await test.step('Then the API should respond with 401 and an authorization error message', async () => {
+            expect(requestResponse).toMatchObject({
+                status: 'error',
+                message: 'missing authorization credentials'
+            })
+        })
+
+        await test.step('And the response should match the 401 error schema', async () => {
+            await apiExpect(requestResponse).toMatchSchema('errors', '401_auth_article')
+        })
+    })
+
+})
