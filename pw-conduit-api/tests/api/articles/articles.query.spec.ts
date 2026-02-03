@@ -193,6 +193,32 @@ test.describe('Articles - Update (PUT) Operations', {
                 .deleteRequest(204)
         })
     })
+
+    test('Should return 404 when updating an article with an invalid slug', async ({ requestHandler, assertApi }) => {
+        let requestResponse: any
+        const invalidSlug = 'this-is-invalid-123'
+
+        await test.step('Given an authenticated user', async () => {
+            // Authentication is handled by the worker fixture (authToken)
+        })
+
+        await test.step('When the user tries to update an article with a non-existing slug', async () => {
+            const payload = buildArticlePayload()
+
+            requestResponse = await requestHandler
+                .path(`/articles/${invalidSlug}`)
+                .body(payload)
+                .putRequest(404)
+        })
+
+        await test.step('Then the API should return a 404 with an empty body', async () => {
+            expect(requestResponse).toEqual({})
+        })
+
+        await test.step('And the response should match the 404 error schema', async () => {
+            await apiExpect(requestResponse).toMatchSchema('errors', 'PUT_404_not_found')
+        })
+    })
 })
 
 test.describe('Articles - Create (POST) Operations', {
