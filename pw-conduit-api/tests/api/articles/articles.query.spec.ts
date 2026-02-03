@@ -291,7 +291,7 @@ test.describe('Articles - Create (POST) Operations', {
         })
 
         await test.step('And the response should match the 401 error schema', async () => {
-            await apiExpect(requestResponse).toMatchSchema('errors', '401_auth_article')
+            await apiExpect(requestResponse).toMatchSchema('errors', 'POST_401_auth_article')
         })
     })
 
@@ -326,7 +326,7 @@ test.describe('Articles - Create (POST) Operations', {
             })
 
             await test.step('And the response should match the 422 error schema', async () => {
-                await apiExpect(articleResponse).toMatchSchema('errors', `422_unprocessable_${field}_article`)
+                await apiExpect(articleResponse).toMatchSchema('errors', `POST_422_unprocessable_${field}_article`)
             })
         })
     }
