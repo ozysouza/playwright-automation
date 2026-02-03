@@ -403,4 +403,31 @@ test.describe('Articles - Delete (DEL) Operations', {
         })
     })
 
+    test('Should return 403 when attemps to delete an article from another user', async ({ requestHandler, assertApi }) => {
+        let requestResponse: any
+
+        await test.step('Given an authenticated user', async () => {
+            // Authentication is handled by the worker fixture (authToken)
+        })
+
+        await test.step('When the user attempts to delete an article from another user', async () => {
+            const articlesResponse = await requestHandler
+                .path('/articles')
+                .getRequest(200)
+
+            requestResponse = await requestHandler
+                .path(`/articles/${articlesResponse.articles[0].slug}`)
+                .deleteRequest(403)     
+        })
+
+        await test.step('Then the API should respond with 403 and an Forbidden error message', async () => {
+            expect(requestResponse).toMatchObject({
+                message: 'You are not authorized to delete this article'
+            })
+        })
+
+        await test.step('And the response should match the 401 error schema', async () => {
+            await apiExpect(requestResponse).toMatchSchema('errors', '403_forbidden_article')
+        })
+    })
 })
