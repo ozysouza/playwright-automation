@@ -1,6 +1,7 @@
 type ApiTestConfig = {
     apiUrl: string
     userEmail: string
+    userName: string
     userPassword: string
 }
 
@@ -19,5 +20,6 @@ function optionalEnv(name: string): string | undefined {
 export const config: ApiTestConfig = {
     apiUrl: requireEnv('CONDUIT_API_URL'),
     userEmail: requireEnv('CONDUIT_API_USER_EMAIL'),
+    userName: requireEnv('CONDUIT_API_USER_NAME'),
     userPassword: requireEnv('CONDUIT_API_USER_PASSWORD'),
 }

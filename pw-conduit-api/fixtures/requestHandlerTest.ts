@@ -7,6 +7,7 @@ import { createToken } from '../helpers/api/CreateTokenApi'
 
 export type TestFixtures = {
     requestHandler: RequestHandlerApi
+    userName: String
 }
 
 export type WorkerFixture = {
@@ -32,5 +33,9 @@ export const requestHandlerTest = base.extend<TestFixtures, WorkerFixture>({
         const logger = new APILogger()
         setCustomExpectLogger(logger)
         await use(new RequestHandlerApi(request, config.apiUrl, logger, authToken))
+    },
+
+    userName: async ({ }, use) => {
+        await use(config.userName)
     }
 })

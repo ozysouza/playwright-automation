@@ -403,7 +403,7 @@ test.describe('Articles - Delete (DEL) Operations', {
         })
     })
 
-    test('Should return 403 when attemps to delete an article from another user', async ({ requestHandler, assertApi }) => {
+    test('Should return 403 when attemps to delete an article from another user', async ({ requestHandler, userName }) => {
         let requestResponse: any
 
         await test.step('Given an authenticated user', async () => {
@@ -415,8 +415,12 @@ test.describe('Articles - Delete (DEL) Operations', {
                 .path('/articles')
                 .getRequest(200)
 
+            const foreignArticle = articlesResponse.articles.find(
+                (a: any) => a.author.username != userName
+            )
+
             requestResponse = await requestHandler
-                .path(`/articles/${articlesResponse.articles[0].slug}`)
+                .path(`/articles/${foreignArticle.slug}`)
                 .deleteRequest(403)
         })
 
