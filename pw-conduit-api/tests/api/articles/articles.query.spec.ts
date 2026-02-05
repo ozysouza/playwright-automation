@@ -486,7 +486,7 @@ test.describe('Articles - Delete (DEL) Operations', {
             })
         })
 
-        await test.step('And the response should match the 401 error schema', async () => {
+        await test.step('And the response should match the 403 error schema', async () => {
             await apiExpect(requestResponse).toMatchSchema('errors', '403_forbidden_article')
         })
     })
