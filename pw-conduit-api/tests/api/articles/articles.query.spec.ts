@@ -158,7 +158,7 @@ test.describe('Articles - Update (PUT) Operations', {
                 .getRequest(200)
 
             const createdArticle = globalArticlesResponse.articles.find(
-                (a: any) => a.slug === baseArticleResponse.article.slug
+                (a: Article) => a.slug === baseArticleResponse.article.slug
             )
 
             expect(createdArticle).toBeTruthy()
@@ -184,7 +184,7 @@ test.describe('Articles - Update (PUT) Operations', {
                 .getRequest(200)
 
             const updatedArticle = globalArticlesRequest.articles.find(
-                (a: any) => a.slug === updatedArticleResponse.article.slug
+                (a: Article) => a.slug === updatedArticleResponse.article.slug
             )
 
             expect(updatedArticleResponse).toBeTruthy()
@@ -289,7 +289,7 @@ test.describe('Articles - Create (POST) Operations', {
                 .getRequest(200)
 
             const createdArticle = globalArticlesRequest.articles.find(
-                (a: any) => a.slug === articleResponse.article.slug
+                (a: Article) => a.slug === articleResponse.article.slug
             )
 
             expect(createdArticle).toBeTruthy()
@@ -417,7 +417,7 @@ test.describe('Articles - Delete (DEL) Operations', {
 
             requestResponse = await requestHandler
                 .path(`/articles/${articlesResponse.articles[0].slug}`)
-                .deleteRequest(403)     
+                .deleteRequest(403)
         })
 
         await test.step('Then the API should respond with 403 and an Forbidden error message', async () => {
