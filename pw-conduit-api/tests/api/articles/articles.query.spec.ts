@@ -373,6 +373,46 @@ test.describe('Articles - Delete (DEL) Operations', {
     tag: '@articles @del',
 }, () => {
 
+    test('Should delete an article and return 204 No Content', async ({ requestHandler, userName }) => {
+        let articleResponse: any
+
+        await test.step('Given the authenticated user has an existing article', async () => {
+            const articlePayload = buildArticlePayload()
+
+            articleResponse = await requestHandler
+                .path('/articles')
+                .body(articlePayload)
+                .postRequest(201)
+
+            const userArticlesResponse = await requestHandler
+                .path('/articles')
+                .params({ author: userName })
+                .getRequest(200)
+
+            expect(userArticlesResponse.articlesCount).toBe(1)
+        })
+
+        await test.step('When the user deletes their article', async () => {
+            await requestHandler
+                .path(`/articles/${articleResponse.article.slug}`)
+                .deleteRequest(204)
+        })
+
+        await test.step('Then the API should return 204 No Content', async () => {
+            // 204 responses have no body by design
+            // Status code assertion is already handled by deleteRequest
+        })
+
+        await test.step('And the article should no longer exist for the user', async () => {
+            const userArticlesResponse = await requestHandler
+                .path('/articles')
+                .params({ author: userName })
+                .getRequest(200)
+
+            expect(userArticlesResponse.articlesCount).toBe(0)
+        })
+    })
+
     test('Should return 401 when deleting an article without authentication', async ({ requestHandler, assertApi }) => {
         let requestResponse: any
 
