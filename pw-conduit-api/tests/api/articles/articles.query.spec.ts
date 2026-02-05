@@ -443,6 +443,22 @@ test.describe('Articles - Delete (DEL) Operations', {
         })
     })
 
+    test('Should return 404 Not Found when deleting an article with an invalid slug', async ({ requestHandler }) => {
+        await test.step('Given the user is authenticated', async () => {
+            // Authentication is handled by the worker fixture (authToken)
+        })
+
+        await test.step('When the user attempts to delete an article using a non-existent slug', async () => {
+            await requestHandler
+                .path('/articles/invalid-slug')
+                .deleteRequest(404)
+        })
+
+        await test.step('Then the API should respond with 404 Not Found', async () => {
+            // Status code validation is handled by deleteRequest
+        })
+    })
+
     test('Should return 403 when attemps to delete an article from another user', async ({ requestHandler, userName }) => {
         let requestResponse: any
 
