@@ -231,6 +231,43 @@ test.describe('Articles - Update (PUT) Operations', {
         })
     })
 
+    test('Should return 403 Forbidden when attempting to update an article owned by another user', async ({ requestHandler, userName }) => {
+        let updateResponse: any
+
+        await test.step('Given an authenticated user', async () => {
+            // Authentication is handled by the worker fixture (authToken)
+        })
+
+        await test.step('When the user attempts to update an article owned by another user', async () => {
+            const articlesResponse = await requestHandler
+                .path('/articles')
+                .getRequest(200)
+
+            const foreignArticle = articlesResponse.articles.find(
+                (a: any) => a.author.username != userName
+            )
+
+            expect(foreignArticle).toBeDefined()
+
+            const payload = buildArticlePayload()
+
+            updateResponse = await requestHandler
+                .path(`/articles/${foreignArticle.slug}`)
+                .body(payload)
+                .putRequest(403)
+        })
+
+        await test.step('Then the API should respond with 403 and an Forbidden error message', async () => {
+            expect(updateResponse).toMatchObject({
+                message: 'You are not authorized to update this article'
+            })
+        })
+
+        await test.step('And the response should match the 403 error schema', async () => {
+            await apiExpect(updateResponse).toMatchSchema('errors', '403_forbidden_article')
+        })
+    })
+
     test('Should return 404 when updating an article with an invalid slug', async ({ requestHandler, assertApi }) => {
         let requestResponse: any
         const invalidSlug = 'this-is-invalid-123'
